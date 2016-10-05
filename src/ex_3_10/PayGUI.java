@@ -15,7 +15,10 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class CalculatePayMachine extends Frame implements ActionListener, DocumentListener{
+public class PayGUI extends Frame implements ActionListener, DocumentListener{
+	
+	private PayLogic p1;
+	private int workingHours, overtimeHours;
 	
 	private JLabel workingHoursLabel = new JLabel("Working Hours = ", Label.RIGHT);
 	private JLabel overTimeHoursLabel = new JLabel("Overtime Hours = " ,Label.RIGHT);
@@ -30,15 +33,19 @@ public class CalculatePayMachine extends Frame implements ActionListener, Docume
 	private JButton calcButton = new JButton("Calculate");
 	private JButton resetButton = new JButton("Reset");
 	private JButton end = new JButton("Stop");
-	
-	public CalculatePayMachine(){
+		
+	//»ý¼ºÀÚ
+	public PayGUI(PayLogic p1){
 		super("Payment Calculation");
+		this.p1 = p1;
 		this.init();
 		this.start();
 		this.setSize(500,250);
 		
 		this.setVisible(true);
 	}
+	
+	//Swing
 	public void init(){
 		this.setLayout(new GridLayout(5,1));
 		Panel p = new Panel(new BorderLayout());
@@ -66,6 +73,8 @@ public class CalculatePayMachine extends Frame implements ActionListener, Docume
 		this.add(p4);
 		
 	}
+	
+	
 	public void start(){
 		calcButton.addActionListener(this);
 		resetButton.addActionListener(this);
@@ -77,6 +86,7 @@ public class CalculatePayMachine extends Frame implements ActionListener, Docume
 		calcButton.setEnabled(false);
 		resetButton.setEnabled(false);
 	}
+	
 	public boolean isDataEntered(){
 		if(tWorkingHours.getText().trim().length() == 0 || tOverTimeHours.getText().trim().length() == 0)
 			return false;
@@ -135,7 +145,7 @@ public class CalculatePayMachine extends Frame implements ActionListener, Docume
 			}
 			
 			int payAmount = 0;
-			payAmount = 10*x + 15*y;
+			payAmount = p1.Calculate(x, y);
 			
 			tResult.setText(String.valueOf(payAmount));
 			resetButton.setEnabled(true);
@@ -143,8 +153,25 @@ public class CalculatePayMachine extends Frame implements ActionListener, Docume
 		
 
 	}
+	
+	public void setCalculate(PayLogic p1) {
+		this.p1 = p1;
+	}
+	
+	public void setWorkingHours(int workingHours) {
+		this.workingHours = workingHours;
+	}
+
+	public void setOvertimeHours(int overtimeHours) {
+		this.overtimeHours = overtimeHours;
+	}
+	
+	public int Calculate(PayLogic p1) {
+		return p1.Calculate(workingHours, overtimeHours);
+	}
+	
 	public static void main(String args[]){
-		new CalculatePayMachine();
+		new PayGUI(new PayLogic1());
 	}
 }
 
